@@ -3,7 +3,9 @@ package com.hemanth.SpringBootMapping.controller;
 
 
 import com.hemanth.SpringBootMapping.EmailConfig.MailConfig;
-import com.hemanth.SpringBootMapping.dto.PageDto;
+//import com.hemanth.SpringBootMapping.MapperClass.PageMapping;
+//import com.hemanth.SpringBootMapping.dto.PageDto;
+import com.hemanth.SpringBootMapping.dto.PageSetting;
 import com.hemanth.SpringBootMapping.dto.StudentDto;
 import com.hemanth.SpringBootMapping.model.Student;
 import com.hemanth.SpringBootMapping.model.University;
@@ -11,11 +13,14 @@ import com.hemanth.SpringBootMapping.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @RestController
 public class StudentController
@@ -72,29 +77,44 @@ public class StudentController
     }
 
 
-    @RequestMapping(method = RequestMethod.GET,value = "/page/details")
-    public PageDto getStudentByPage(@RequestParam(value="pageNo",defaultValue = "0",required = false)int pageNo,
-                                    @RequestParam(value="pageSize",defaultValue = "1",required = false)int pageSize)
-    {
-
-         return ss.getPageWiseStudents(pageNo,pageSize);
-
-    }
-
-    @RequestMapping(method = RequestMethod.GET,value = "custom/page/details/{offset}/{pageSize}")
-    public PageDto getStudentByPageCustom(@PathVariable int offset,@PathVariable int pageSize)
-    {
-
-        return ss.getPageWiseStudents(offset,pageSize);
-
-    }
-
-//    @GetMapping("/student/search")
-//    public ResponseEntity readBooks (Pageable pageable)
+//    @RequestMapping(method = RequestMethod.GET,value = "/page/details")
+//    public PageDto getStudentByPage(@RequestParam(value="pageNo",defaultValue = "0",required = false)int pageNo,
+//                                    @RequestParam(value="pageSize",defaultValue = "1",required = false)int pageSize)
 //    {
-//        return ResponseEntity.ok(ss.readStud(pageable));
+//
+//         return ss.getPageWiseStudents(pageNo,pageSize);
+//
+//    }
+//
+//    @RequestMapping(method = RequestMethod.GET,value = "custom/page/details/{offset}/{pageSize}")
+//    public PageDto getStudentByPageCustom(@PathVariable int offset,@PathVariable int pageSize)
+//    {
+//
+//        return ss.getPageWiseStudents(offset,pageSize);
+//
 //    }
 
+
+
+//    @GetMapping("/page")
+//    public PageDto<Student> getPlantPage(PageDto pageDto)
+//    {
+//
+//        log.info(
+//                "Request for plant page received with data : " + pageDto);
+//
+//        return PageMapping.pageToPageDto(plantService.getPlantPage(pageSettings));
+//    }
+
+    @GetMapping("/page")
+    public Page<Student> getStudentPage(PageSetting pageSettings)
+    {
+
+        log.info(
+                "Request for Student page received with data : " + pageSettings);
+
+        return ss.getStudentPage(pageSettings);
+    }
 
 
 
